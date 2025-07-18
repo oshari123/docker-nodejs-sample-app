@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        IMAGE_BASE = "trialfwrmrd.jfrog.io/sample-nodejs-app/sample-nodejs-appi"
+        IMAGE_BASE = "trialfwrmrd.jfrog.io/sample-nodejs-app/sample-nodejs-app2"
         TAGS = "v1,v2,v3,v4,v5"
     }
 
@@ -22,7 +22,8 @@ pipeline {
 		    
                     tagList.each { tag ->
                         sh """
-                        	docker build --build-arg VERSION=${tag} -t ${IMAGE_BASE}:${tag} .
+                        	echo "// build version ${tag}" > version.txt
+        			docker build --build-arg VERSION=${tag} -t ${IMAGE_BASE}:${tag} .
         			docker push ${IMAGE_BASE}:${tag}
                         """
                     }
