@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        IMAGE_BASE = "trialfwrmrd.jfrog.io/sample-nodejs-app"
+        IMAGE_BASE = "trialfwrmrd.jfrog.io/artifactory/sample-nodejs-app/"
         TAGS = "v1,v2,v3,v4,v5"
     }
 
