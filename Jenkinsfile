@@ -19,18 +19,43 @@ pipeline {
             steps {
                 script {
                     def tagList = TAGS.split(',')
-		    
+
                     tagList.each { tag ->
                         sh """
-                        	echo "// build version ${tag}" > version.txt
-        			docker build --build-arg VERSION=${tag} -t ${IMAGE_BASE}:${tag} .
-        			docker push ${IMAGE_BASE}:${tag}
+                                echo "// build version ${tag}" > version.txt
+                                docker build --build-arg VERSION=${tag} -t ${IMAGE_BASE}:${tag} .
+                                docker push ${IMAGE_BASE}:${tag}
                         """
                     }
                 }
             }
         }
+    	
+	stage('Delete Local Images') {
+            steps {
+                script {
+                    def tagList = TAGS.split(',')
+
+                    tagList.each { tag ->
+                        sh "docker rmi ${IMAGE_BASE}:${tag} || true"
+                    }
+                }
+            }
+        }
+
+        stage('Pull from Artifactory') {
+            steps {
+                script {
+                    def tagList = TAGS.split(',')
+
+                    tagList.each { tag ->
+                        sh "docker pull ${IMAGE_BASE}:${tag}"
+                    }
+                }
+            }
+        }
     }
+}
 
 post {
         success {
